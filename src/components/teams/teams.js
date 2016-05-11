@@ -17,7 +17,6 @@ export class Teams extends Component {
 
 	handleSubmit() {
 		let teamName = this.refs.teamName.getValue();
-		console.log(teamName);
 		this.props.createTeam(teamName);
 	}
 
@@ -31,7 +30,7 @@ export class Teams extends Component {
 			<div className="g-row">
         <div className="g-col">
         	<TextField ref="teamName"></TextField><RaisedButton label="Create Team" onMouseDown={this.handleSubmit.bind(this)} />
-        	<TeamsList teams={teams} />
+        	<TeamsList teams={teams} {...this.props}/>
         </div>
       </div>
 		);
