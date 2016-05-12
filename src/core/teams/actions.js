@@ -51,20 +51,32 @@ export function createTeam(teamName) {
 	};
 }
 
-export function deleteTeam(teamName) {
+export function deleteTeam(teamKey) {
 	return (dispatch, getState) => {
 		const { auth, firebase } = getState();
+		console.log(teamKey);
+		firebase.child(`teams/${teamKey}/members`)
+			.once('value', snapshot => {
+				let members = Object.keys(snapshot.val());
 
-		firebase.child(`teams/${teamName.key}`)
-			.remove({teamName}, error => {
-				if (error) {
-					console.error('ERROR @ deleteTeam :', error);
-					dispatch({
-						type: CREATE_TEAM_ERROR,
-						payload: error
-					});
-				}
+				members.forEach(member => {
+					firebase.child(`users/${member}/teams/${teamKey}`)
+						.remove();
+				});
+
+				firebase.child(`teams/${teamKey}`).remove()
 			});
+
+		// firebase.child(`teams/${teamName.key}`)
+		// 	.remove({teamName}, error => {
+		// 		if (error) {
+		// 			console.error('ERROR @ deleteTeam :', error);
+		// 			dispatch({
+		// 				type: CREATE_TEAM_ERROR,
+		// 				payload: error
+		// 			});
+		// 		}
+		// 	});
 	};
 }
 
@@ -109,12 +121,14 @@ export function registerListeners() {
 		    	}));
   			});
 
-    ref.on('child_changed', snapshot => dispatch({
+    ref.child(`users/${auth.id}/teams`)
+    .on('child_changed', snapshot => dispatch({
       type: UPDATE_TEAM_SUCCESS,
       payload: recordFromSnapshot(snapshot)
     }));
 
-    ref.on('child_removed', snapshot => dispatch({
+    ref.child(`users/${auth.id}/teams`)
+    .on('child_removed', snapshot => dispatch({
       type: DELETE_TEAM_SUCCESS,
       payload: recordFromSnapshot(snapshot)
     }));
@@ -123,7 +137,7 @@ export function registerListeners() {
 }
 
 function recordFromSnapshot(snapshot) {
-  let record = snapshot.val();
+  let record = snapshot.val() === true ? {} : snapshot.val();
   record.key = snapshot.key();
   return record;
 }

@@ -19,6 +19,13 @@ export function teamsReducer(state = initialState, action) {
 			let list = [ action.payload, ...state.list ];
 			return {list};
 
+		case DELETE_TEAM_SUCCESS:
+			return {
+				list: state.list.filter(team => {
+					return team.key !== action.payload.key;
+				})
+			};
+
 		case CLEAR_TEAM_STATE:
 			return initialState;
 
