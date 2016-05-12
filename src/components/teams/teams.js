@@ -15,6 +15,10 @@ export class Teams extends Component {
 		this.props.registerListeners();
 	}
 
+	componentWillUnmount() {
+		this.props.clearState();
+	}
+
 	handleSubmit() {
 		let teamName = this.refs.teamName.getValue();
 		this.props.createTeam(teamName);

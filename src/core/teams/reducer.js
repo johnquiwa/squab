@@ -5,7 +5,8 @@ import {
 import {
   CREATE_TEAM_SUCCESS,
   DELETE_TEAM_SUCCESS,
-  UPDATE_TEAM_SUCCESS
+  UPDATE_TEAM_SUCCESS,
+  CLEAR_TEAM_STATE
 } from './action-types';
 
 export const initialState = {
@@ -17,6 +18,9 @@ export function teamsReducer(state = initialState, action) {
 		case CREATE_TEAM_SUCCESS:
 			let list = [ action.payload, ...state.list ];
 			return {list};
+
+		case CLEAR_TEAM_STATE:
+			return initialState;
 
 		default:
 			return state;

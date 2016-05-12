@@ -8,7 +8,7 @@ export default class TeamsList extends Component {
 	handleClick(team){
 		console.log(team);
 		console.log(this.props);
-		this.props.history.push(`/teams/${team.key}`)
+		this.props.history.push(`/teams/${team.key}`);
 	}
 
 	renderTeams() {
